@@ -1,0 +1,108 @@
+Index: src/main/java/com/crediya/usuarios/application/UsuarioService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/crediya/usuarios/application/UsuarioService.java b/src/main/java/com/crediya/usuarios/application/UsuarioService.java
+--- a/src/main/java/com/crediya/usuarios/application/UsuarioService.java	
++++ b/src/main/java/com/crediya/usuarios/application/UsuarioService.java	(date 1756392485931)
+@@ -2,16 +2,12 @@
+ 
+ import com.crediya.usuarios.domain.Usuario;
+ import com.crediya.usuarios.domain.UsuarioRepositoryPort;
+-import org.slf4j.Logger;
+-import org.slf4j.LoggerFactory;
+ import org.springframework.stereotype.Service;
+ import reactor.core.publisher.Mono;
+ 
+ @Service
+ public class UsuarioService {
+ 
+-    private static final Logger logger = LoggerFactory.getLogger(UsuarioService.class);
+-
+     private final UsuarioRepositoryPort repository;
+ 
+     public UsuarioService(UsuarioRepositoryPort repository) {
+@@ -19,18 +15,12 @@
+     }
+ 
+     public Mono<Usuario> registrarUsuario(Usuario usuario) {
+-        logger.info("Intentando registrar usuario con correo: {}", usuario.getCorreoElectronico());
+-
+         return repository.existsByCorreoElectronico(usuario.getCorreoElectronico())
+                 .flatMap(existe -> {
+                     if (existe) {
+-                        logger.warn("Registro fallido: el correo {} ya está registrado", usuario.getCorreoElectronico());
+                         return Mono.error(new RuntimeException("El correo ya está registrado"));
+                     } else {
+-                        logger.info("Correo {} disponible, procediendo a registrar", usuario.getCorreoElectronico());
+-                        return repository.save(usuario)
+-                                .doOnSuccess(u -> logger.info("Usuario registrado con id {}", u.getId()))
+-                                .doOnError(err -> logger.error("Error al registrar usuario: {}", err.getMessage()));
++                        return repository.save(usuario);
+                     }
+                 });
+     }
+Index: src/main/java/com/crediya/usuarios/infrastructure/handler/GlobalExceptionHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/crediya/usuarios/infrastructure/handler/GlobalExceptionHandler.java b/src/main/java/com/crediya/usuarios/infrastructure/handler/GlobalExceptionHandler.java
+--- a/src/main/java/com/crediya/usuarios/infrastructure/handler/GlobalExceptionHandler.java	
++++ b/src/main/java/com/crediya/usuarios/infrastructure/handler/GlobalExceptionHandler.java	(date 1756392485911)
+@@ -1,54 +1,4 @@
+ package com.crediya.usuarios.infrastructure.handler;
+ 
+-
+-import org.springframework.http.HttpStatus;
+-import org.springframework.http.MediaType;
+-import org.springframework.web.bind.annotation.ExceptionHandler;
+-import org.springframework.web.bind.annotation.RestControllerAdvice;
+-import org.springframework.web.server.ServerWebExchange;
+-import reactor.core.publisher.Mono;
+-
+-import java.util.HashMap;
+-import java.util.Map;
+-
+-@RestControllerAdvice
+ public class GlobalExceptionHandler {
+-
+-    // Manejo de validaciones (Bean Validation con @Valid)
+-    @ExceptionHandler(org.springframework.web.bind.support.WebExchangeBindException.class)
+-    public Mono<Map<String, Object>> handleValidationException(
+-            org.springframework.web.bind.support.WebExchangeBindException ex,
+-            ServerWebExchange exchange) {
+-
+-        Map<String, Object> response = new HashMap<>();
+-        response.put("status", HttpStatus.BAD_REQUEST.value());
+-        response.put("error", "Validación fallida");
+-        response.put("path", exchange.getRequest().getPath().toString());
+-
+-        // Lista de errores de validación
+-        response.put("messages", ex.getFieldErrors().stream()
+-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+-                .toList());
+-
+-        exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
+-        exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
+-
+-        return Mono.just(response);
+-    }
+-
+-    // Manejo de errores generales (ej: correo duplicado, runtime)
+-    @ExceptionHandler(RuntimeException.class)
+-    public Mono<Map<String, Object>> handleRuntimeException(
+-            RuntimeException ex, ServerWebExchange exchange) {
+-
+-        Map<String, Object> response = new HashMap<>();
+-        response.put("status", HttpStatus.BAD_REQUEST.value());
+-        response.put("error", ex.getMessage());
+-        response.put("path", exchange.getRequest().getPath().toString());
+-
+-        exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
+-        exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
+-
+-        return Mono.just(response);
+-    }
+ }

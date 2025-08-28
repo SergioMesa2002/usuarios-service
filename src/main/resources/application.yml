@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: usuarios-service
+
+  r2dbc:
+    url: r2dbc:mariadb://localhost:3306/usuariosdb
+    username: spring
+    password: spring123
+
+  sql:
+    init:
+      mode: always
+
+logging:
+  level:
+    root: INFO
+    org.springframework.r2dbc: DEBUG
