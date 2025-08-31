@@ -7,18 +7,30 @@ public class Usuario {
     private Long id;
 
     @NotBlank(message = "El nombre no puede estar vacío")
+    @Size(min = 2, max = 50, message = "El nombre debe tener entre 2 y 50 caracteres")
     private String nombres;
 
     @NotBlank(message = "Los apellidos no pueden estar vacíos")
+    @Size(min = 2, max = 50, message = "Los apellidos deben tener entre 2 y 50 caracteres")
     private String apellidos;
 
+    @NotBlank(message = "El correo electrónico no puede estar vacío")
     @Email(message = "El correo electrónico no es válido")
+    @Pattern(
+            regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$",
+            message = "El correo electrónico debe contener un formato válido"
+    )
     private String correoElectronico;
 
     @NotBlank(message = "La dirección no puede estar vacía")
+    @Size(min = 5, max = 100, message = "La dirección debe tener entre 5 y 100 caracteres")
     private String direccion;
 
     @NotBlank(message = "El teléfono no puede estar vacío")
+    @Pattern(
+            regexp = "^[0-9]{7,10}$",
+            message = "El teléfono debe contener entre 7 y 10 dígitos numéricos"
+    )
     private String telefono;
 
     @NotNull(message = "El salario base es obligatorio")
@@ -26,10 +38,13 @@ public class Usuario {
     private Double salarioBase;
 
     @NotBlank(message = "La fecha de nacimiento es obligatoria")
+    @Pattern(
+            regexp = "^\\d{4}-\\d{2}-\\d{2}$",
+            message = "La fecha de nacimiento debe tener el formato yyyy-MM-dd"
+    )
     private String fechaNacimiento;
 
     // --- Getters y Setters ---
-
     public Long getId() {
         return id;
     }
