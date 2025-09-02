@@ -2,6 +2,7 @@ package com.crediya.usuarios.infrastructure.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+import java.time.LocalDateTime;
 
 @Table("solicitudes")
 public class SolicitudEntity {
@@ -13,22 +14,23 @@ public class SolicitudEntity {
     private Integer plazoSolicitado;
     private String tipoPrestamo;
     private String estado;
+    private LocalDateTime fechaCreacion;
 
-    // --- Constructor vacío requerido por Spring Data ---
     public SolicitudEntity() {}
 
-    // --- Constructor con parámetros ---
     public SolicitudEntity(Long id, Long clienteId, Double montoSolicitado,
-                           Integer plazoSolicitado, String tipoPrestamo, String estado) {
+                           Integer plazoSolicitado, String tipoPrestamo,
+                           String estado, LocalDateTime fechaCreacion) {
         this.id = id;
         this.clienteId = clienteId;
         this.montoSolicitado = montoSolicitado;
         this.plazoSolicitado = plazoSolicitado;
         this.tipoPrestamo = tipoPrestamo;
         this.estado = estado;
+        this.fechaCreacion = fechaCreacion;
     }
 
-    // --- Getters y Setters ---
+    // Getters y setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -46,4 +48,7 @@ public class SolicitudEntity {
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
+
+    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
+    public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
 }
