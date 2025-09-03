@@ -84,7 +84,7 @@ public class SolicitudController {
     }
 
     // ✅ Clase interna correcta
-    static class ErrorResponse {
+    public static class ErrorResponse {
         private final String error;
         private final String detalle;
 
