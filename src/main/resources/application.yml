@@ -3,15 +3,19 @@ spring:
     name: usuarios-service
 
   r2dbc:
-    url: r2dbc:mariadb://localhost:3306/usuariosdb
+    url: r2dbc:mysql://localhost:3306/usuariosdb?allowPublicKeyRetrieval=true&useSSL=false
     username: spring
     password: spring123
+    pool:
+      initial-size: 5
+      max-size: 10
+      max-idle-time: 30m
 
   sql:
     init:
-      mode: always
+      mode: always  # En producción cámbialo a 'never'
 
 logging:
   level:
     root: INFO
-    org.springframework.r2dbc: DEBUG
+    org.springframework.r2dbc: DEBUG  # Opcional para depurar queries

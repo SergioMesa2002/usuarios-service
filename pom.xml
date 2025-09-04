@@ -62,11 +62,7 @@
 			<scope>runtime</scope>
 		</dependency>
 		<!-- R2DBC MySQL -->
-		<dependency>
-			<groupId>io.asyncer</groupId>
-			<artifactId>r2dbc-mysql</artifactId>
-			<version>1.0.4</version>
-		</dependency>
+
 
 		<!-- JDBC MySQL (para inicialización y compatibilidad) -->
 		<dependency>
