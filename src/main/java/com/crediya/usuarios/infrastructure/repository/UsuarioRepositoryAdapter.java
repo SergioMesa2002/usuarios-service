@@ -6,6 +6,8 @@ import com.crediya.usuarios.infrastructure.entity.UsuarioEntity;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
+
 @Component
 public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
 
@@ -17,20 +19,8 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
 
     @Override
     public Mono<Usuario> save(Usuario usuario) {
-        UsuarioEntity entity = new UsuarioEntity(
-                usuario.getId(),
-                usuario.getNombres(),
-                usuario.getApellidos(),
-                usuario.getCorreoElectronico(),
-                usuario.getDireccion(),
-                usuario.getTelefono(),
-                usuario.getSalarioBase(),
-                usuario.getFechaNacimiento(),
-                usuario.getPassword(),
-                usuario.getRol()
-        );
-        return reactiveRepository.save(entity)
-                .map(this::toDomain);
+        UsuarioEntity entity = toEntity(usuario);
+        return reactiveRepository.save(entity).map(this::toDomain);
     }
 
     @Override
@@ -44,6 +34,23 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
                 .map(this::toDomain);
     }
 
+    // ------------------- Mappers -------------------
+
+    private UsuarioEntity toEntity(Usuario usuario) {
+        return new UsuarioEntity(
+                usuario.getId(),
+                usuario.getNombres(),
+                usuario.getApellidos(),
+                usuario.getCorreoElectronico(),
+                usuario.getDireccion(),
+                usuario.getTelefono(),
+                usuario.getSalarioBase(),
+                usuario.getFechaNacimiento() != null ? LocalDate.parse(usuario.getFechaNacimiento()) : null, // 👈 String -> LocalDate
+                usuario.getPassword(),
+                usuario.getRol()
+        );
+    }
+
     private Usuario toDomain(UsuarioEntity entity) {
         Usuario usuario = new Usuario();
         usuario.setId(entity.getId());
@@ -53,7 +60,9 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
         usuario.setDireccion(entity.getDireccion());
         usuario.setTelefono(entity.getTelefono());
         usuario.setSalarioBase(entity.getSalarioBase());
-        usuario.setFechaNacimiento(entity.getFechaNacimiento());
+        usuario.setFechaNacimiento(
+                entity.getFechaNacimiento() != null ? entity.getFechaNacimiento().toString() : null // 👈 LocalDate -> String
+        );
         usuario.setPassword(entity.getPassword());
         usuario.setRol(entity.getRol());
         return usuario;
