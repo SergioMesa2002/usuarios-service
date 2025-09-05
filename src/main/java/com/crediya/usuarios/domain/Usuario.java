@@ -33,6 +33,17 @@ public class Usuario {
     )
     private String telefono;
 
+    @NotBlank(message = "La contraseña es obligatoria")
+    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
+    private String password;
+
+    @NotBlank(message = "El rol es obligatorio")
+    @Pattern(
+            regexp = "^(ADMIN|ASESOR|CLIENTE)$",
+            message = "El rol debe ser ADMIN, ASESOR o CLIENTE"
+    )
+    private String rol;
+
     @NotNull(message = "El salario base es obligatorio")
     @Min(value = 0, message = "El salario base debe ser mayor o igual a 0")
     private Double salarioBase;
@@ -45,59 +56,33 @@ public class Usuario {
     private String fechaNacimiento;
 
     // --- Getters y Setters ---
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getNombres() {
-        return nombres;
-    }
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
-    }
+    public String getNombres() { return nombres; }
+    public void setNombres(String nombres) { this.nombres = nombres; }
 
-    public String getApellidos() {
-        return apellidos;
-    }
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
-    }
+    public String getApellidos() { return apellidos; }
+    public void setApellidos(String apellidos) { this.apellidos = apellidos; }
 
-    public String getCorreoElectronico() {
-        return correoElectronico;
-    }
-    public void setCorreoElectronico(String correoElectronico) {
-        this.correoElectronico = correoElectronico;
-    }
+    public String getCorreoElectronico() { return correoElectronico; }
+    public void setCorreoElectronico(String correoElectronico) { this.correoElectronico = correoElectronico; }
 
-    public String getDireccion() {
-        return direccion;
-    }
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
+    public String getDireccion() { return direccion; }
+    public void setDireccion(String direccion) { this.direccion = direccion; }
 
-    public String getTelefono() {
-        return telefono;
-    }
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
+    public String getTelefono() { return telefono; }
+    public void setTelefono(String telefono) { this.telefono = telefono; }
 
-    public Double getSalarioBase() {
-        return salarioBase;
-    }
-    public void setSalarioBase(Double salarioBase) {
-        this.salarioBase = salarioBase;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public String getFechaNacimiento() {
-        return fechaNacimiento;
-    }
-    public void setFechaNacimiento(String fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
+    public String getRol() { return rol; }
+    public void setRol(String rol) { this.rol = rol; }
+
+    public Double getSalarioBase() { return salarioBase; }
+    public void setSalarioBase(Double salarioBase) { this.salarioBase = salarioBase; }
+
+    public String getFechaNacimiento() { return fechaNacimiento; }
+    public void setFechaNacimiento(String fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
 }

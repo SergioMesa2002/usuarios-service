@@ -9,15 +9,14 @@ import reactor.core.publisher.Mono;
 @Component
 public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
 
-    private final UsuarioReactiveRepository repository;
+    private final UsuarioReactiveRepository reactiveRepository;
 
-    public UsuarioRepositoryAdapter(UsuarioReactiveRepository repository) {
-        this.repository = repository;
+    public UsuarioRepositoryAdapter(UsuarioReactiveRepository reactiveRepository) {
+        this.reactiveRepository = reactiveRepository;
     }
 
     @Override
     public Mono<Usuario> save(Usuario usuario) {
-        // Construcción manual sin Lombok
         UsuarioEntity entity = new UsuarioEntity(
                 usuario.getId(),
                 usuario.getNombres(),
@@ -26,26 +25,37 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
                 usuario.getDireccion(),
                 usuario.getTelefono(),
                 usuario.getSalarioBase(),
-                usuario.getFechaNacimiento()
+                usuario.getFechaNacimiento(),
+                usuario.getPassword(),
+                usuario.getRol()
         );
-
-        return repository.save(entity)
-                .map(saved -> {
-                    Usuario nuevo = new Usuario();
-                    nuevo.setId(saved.getId());
-                    nuevo.setNombres(saved.getNombres());
-                    nuevo.setApellidos(saved.getApellidos());
-                    nuevo.setCorreoElectronico(saved.getCorreoElectronico());
-                    nuevo.setDireccion(saved.getDireccion());
-                    nuevo.setTelefono(saved.getTelefono());
-                    nuevo.setSalarioBase(saved.getSalarioBase());
-                    nuevo.setFechaNacimiento(saved.getFechaNacimiento());
-                    return nuevo;
-                });
+        return reactiveRepository.save(entity)
+                .map(this::toDomain);
     }
 
     @Override
     public Mono<Boolean> existsByCorreoElectronico(String correo) {
-        return repository.existsByCorreoElectronico(correo);
+        return reactiveRepository.existsByCorreoElectronico(correo);
+    }
+
+    @Override
+    public Mono<Usuario> findByCorreoElectronico(String correo) {
+        return reactiveRepository.findByCorreoElectronico(correo)
+                .map(this::toDomain);
+    }
+
+    private Usuario toDomain(UsuarioEntity entity) {
+        Usuario usuario = new Usuario();
+        usuario.setId(entity.getId());
+        usuario.setNombres(entity.getNombres());
+        usuario.setApellidos(entity.getApellidos());
+        usuario.setCorreoElectronico(entity.getCorreoElectronico());
+        usuario.setDireccion(entity.getDireccion());
+        usuario.setTelefono(entity.getTelefono());
+        usuario.setSalarioBase(entity.getSalarioBase());
+        usuario.setFechaNacimiento(entity.getFechaNacimiento());
+        usuario.setPassword(entity.getPassword());
+        usuario.setRol(entity.getRol());
+        return usuario;
     }
 }
