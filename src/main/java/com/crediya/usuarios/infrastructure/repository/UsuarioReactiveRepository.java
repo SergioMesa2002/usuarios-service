@@ -7,4 +7,8 @@ import reactor.core.publisher.Mono;
 
 public interface UsuarioReactiveRepository extends ReactiveCrudRepository<UsuarioEntity, Long> {
     Mono<Boolean> existsByCorreoElectronico(String correoElectronico);
+
+    interface UsuarioRepository extends ReactiveCrudRepository<UsuarioEntity, Long> {
+        Mono<UsuarioEntity> findByCorreoElectronico(String correoElectronico);
+    }
 }

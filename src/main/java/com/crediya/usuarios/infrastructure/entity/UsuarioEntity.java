@@ -15,13 +15,16 @@ public class UsuarioEntity {
     private String telefono;
     private Double salarioBase;
     private String fechaNacimiento;
+    private String password;
+    private String rol;
 
-    // Constructor vacío (requerido por Spring Data)
+    // 🔹 Constructor vacío (Spring Data lo necesita)
     public UsuarioEntity() {}
 
-    // Constructor con todos los campos
+    // 🔹 Constructor intermedio (8 parámetros, sin password ni rol)
     public UsuarioEntity(Long id, String nombres, String apellidos, String correoElectronico,
-                         String direccion, String telefono, Double salarioBase, String fechaNacimiento) {
+                         String direccion, String telefono, Double salarioBase,
+                         String fechaNacimiento) {
         this.id = id;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -32,7 +35,23 @@ public class UsuarioEntity {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    // --- Getters y Setters ---
+    // 🔹 Constructor completo (10 parámetros)
+    public UsuarioEntity(Long id, String nombres, String apellidos, String correoElectronico,
+                         String direccion, String telefono, Double salarioBase,
+                         String fechaNacimiento, String password, String rol) {
+        this.id = id;
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.correoElectronico = correoElectronico;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.salarioBase = salarioBase;
+        this.fechaNacimiento = fechaNacimiento;
+        this.password = password;
+        this.rol = rol;
+    }
+
+    // 🔹 Getters y setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -56,4 +75,10 @@ public class UsuarioEntity {
 
     public String getFechaNacimiento() { return fechaNacimiento; }
     public void setFechaNacimiento(String fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+
+    public String getRol() { return rol; }
+    public void setRol(String rol) { this.rol = rol; }
 }

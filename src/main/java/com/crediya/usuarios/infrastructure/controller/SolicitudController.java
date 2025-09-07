@@ -101,4 +101,15 @@ public class SolicitudController {
             return detalle;
         }
     }
+
+    // Endpoint para listar solicitudes filtradas/paginadas (solo para rol ASESOR)
+    @GetMapping("/filtradas")
+    public Flux<com.crediya.usuarios.infrastructure.dto.SolicitudDTO> listarSolicitudesFiltradas(
+            @RequestParam(defaultValue = "Pendiente") String estado,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return solicitudService.listarSolicitudesFiltradas(estado, page, size);
+    }
+
 }
