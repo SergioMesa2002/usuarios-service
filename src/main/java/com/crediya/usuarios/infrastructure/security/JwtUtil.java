@@ -15,55 +15,54 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private final String SECRET_KEY = "tu_clave_super_segura_que_tenga_buen_largo";
+    // 🔑 Clave larga y estable (mínimo 32 caracteres, recomendado 64)
+    private final String SECRET_KEY = "crediya_secret_key_segura_2025_para_jwt_token_validacion_64chars";
     private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
 
-    // Generar token
+
+    // ✅ Generar token
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas
-                .signWith(key, SignatureAlgorithm.HS256) // ✅ nuevo método
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10h
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Validar token
+    // ✅ Validar token
     public boolean validateToken(String token) {
         try {
             return !isTokenExpired(token);
         } catch (Exception e) {
+            System.out.println("❌ Error validando token: " + e.getMessage());
             return false;
         }
     }
 
-    // Obtener username desde el token
+    // ✅ Obtener username
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
-    // Alias para compatibilidad con JwtAuthenticationFilter
+    // ✅ Alias para compatibilidad con JwtAuthenticationFilter
     public String extractUsername(String token) {
         return getUsernameFromToken(token);
     }
 
     // ---------------- Métodos internos ----------------
 
-    public Date getExpirationDateFromToken(String token) {
+    private Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
     }
 
-    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = getAllClaimsFromToken(token);
-        return claimsResolver.apply(claims);
-    }
-
-    private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parserBuilder()  // ✅ nuevo método
-                .setSigningKey(key)  // ✅ con Key
+    private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+        return claimsResolver.apply(claims);
     }
 
     private boolean isTokenExpired(String token) {
