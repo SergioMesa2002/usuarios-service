@@ -44,6 +44,13 @@ public class Usuario {
     )
     private String fechaNacimiento;
 
+    @NotBlank(message = "La contraseña no puede estar vacía")
+    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
+    private String password;
+
+    @NotBlank(message = "El rol no puede estar vacío")
+    private String rol;
+
     // --- Getters y Setters ---
     public Long getId() {
         return id;
@@ -99,5 +106,19 @@ public class Usuario {
     }
     public void setFechaNacimiento(String fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+    public void setRol(String rol) {
+        this.rol = rol;
     }
 }

@@ -6,6 +6,8 @@ import com.crediya.usuarios.infrastructure.entity.UsuarioEntity;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
+
 @Component
 public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
 
@@ -17,7 +19,12 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
 
     @Override
     public Mono<Usuario> save(Usuario usuario) {
-        // Construcción manual sin Lombok
+        // Convertir String → LocalDate (si no es null)
+        LocalDate fechaNacimiento = null;
+        if (usuario.getFechaNacimiento() != null && !usuario.getFechaNacimiento().isEmpty()) {
+            fechaNacimiento = LocalDate.parse(usuario.getFechaNacimiento());
+        }
+
         UsuarioEntity entity = new UsuarioEntity(
                 usuario.getId(),
                 usuario.getNombres(),
@@ -26,7 +33,9 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
                 usuario.getDireccion(),
                 usuario.getTelefono(),
                 usuario.getSalarioBase(),
-                usuario.getFechaNacimiento()
+                fechaNacimiento,
+                usuario.getPassword(),
+                usuario.getRol()
         );
 
         return repository.save(entity)
@@ -39,7 +48,14 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
                     nuevo.setDireccion(saved.getDireccion());
                     nuevo.setTelefono(saved.getTelefono());
                     nuevo.setSalarioBase(saved.getSalarioBase());
-                    nuevo.setFechaNacimiento(saved.getFechaNacimiento());
+
+                    // Convertir LocalDate → String (si no es null)
+                    nuevo.setFechaNacimiento(saved.getFechaNacimiento() != null
+                            ? saved.getFechaNacimiento().toString()
+                            : null);
+
+                    nuevo.setPassword(saved.getPassword());
+                    nuevo.setRol(saved.getRol());
                     return nuevo;
                 });
     }

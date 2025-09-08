@@ -2,6 +2,7 @@ package com.crediya.usuarios.infrastructure.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+import java.time.LocalDate;
 
 @Table("usuarios")
 public class UsuarioEntity {
@@ -14,7 +15,7 @@ public class UsuarioEntity {
     private String direccion;
     private String telefono;
     private Double salarioBase;
-    private String fechaNacimiento;
+    private LocalDate fechaNacimiento; // 👈 CAMBIO: LocalDate en lugar de String
     private String password;
     private String rol;
 
@@ -24,7 +25,7 @@ public class UsuarioEntity {
     // 🔹 Constructor intermedio (8 parámetros, sin password ni rol)
     public UsuarioEntity(Long id, String nombres, String apellidos, String correoElectronico,
                          String direccion, String telefono, Double salarioBase,
-                         String fechaNacimiento) {
+                         LocalDate fechaNacimiento) {
         this.id = id;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -38,7 +39,7 @@ public class UsuarioEntity {
     // 🔹 Constructor completo (10 parámetros)
     public UsuarioEntity(Long id, String nombres, String apellidos, String correoElectronico,
                          String direccion, String telefono, Double salarioBase,
-                         String fechaNacimiento, String password, String rol) {
+                         LocalDate fechaNacimiento, String password, String rol) {
         this.id = id;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -73,8 +74,8 @@ public class UsuarioEntity {
     public Double getSalarioBase() { return salarioBase; }
     public void setSalarioBase(Double salarioBase) { this.salarioBase = salarioBase; }
 
-    public String getFechaNacimiento() { return fechaNacimiento; }
-    public void setFechaNacimiento(String fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
+    public LocalDate getFechaNacimiento() { return fechaNacimiento; }
+    public void setFechaNacimiento(LocalDate fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
