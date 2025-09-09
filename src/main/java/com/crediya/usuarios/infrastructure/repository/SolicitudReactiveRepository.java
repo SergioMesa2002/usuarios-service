@@ -16,8 +16,11 @@ public interface SolicitudReactiveRepository extends ReactiveCrudRepository<Soli
                CONCAT(u.nombres, ' ', u.apellidos) AS nombre,
                s.tipo_prestamo AS tipoPrestamo,
                s.estado AS estadoSolicitud,
+               s.tasa_interes AS tasaInteres,
                u.salario_base AS salarioBase,
-               (SELECT COUNT(*) FROM solicitudes sa WHERE sa.cliente_id = u.id AND sa.estado = 'Aprobado') AS solicitudesAprobadas
+               u.deuda_total_mensual AS deudaTotalMensual,
+               (SELECT COUNT(*) FROM solicitudes sa 
+                   WHERE sa.cliente_id = u.id AND sa.estado = 'Aprobado') AS solicitudesAprobadas
         FROM solicitudes s
         JOIN usuarios u ON s.cliente_id = u.id
         WHERE (:estado IS NULL OR s.estado = :estado)
