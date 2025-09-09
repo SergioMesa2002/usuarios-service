@@ -79,7 +79,9 @@ public class SolicitudService {
     // Método para listar solicitudes filtradas y paginadas (DTO)
     public Flux<com.crediya.usuarios.infrastructure.dto.SolicitudDTO> listarSolicitudesFiltradas(String estado, int page, int size) {
         int offset = page * size;
-        return repository.findSolicitudesFiltradas(estado, size, offset);
+        return repository.findSolicitudesFiltradas(estado,  size, offset);
     }
+
+
 
 }

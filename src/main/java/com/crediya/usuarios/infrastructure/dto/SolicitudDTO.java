@@ -13,9 +13,17 @@ public class SolicitudDTO {
     private Double deudaTotalMensual;    // 👈 faltaba
     private Integer solicitudesAprobadas;
 
-    public SolicitudDTO(Long id, Double monto, Integer plazo, String email, String nombre,
-                        String tipoPrestamo, String estadoSolicitud, Double tasaInteres,
-                        Double salarioBase, Double deudaTotalMensual, Integer solicitudesAprobadas) {
+    public SolicitudDTO(Long id,
+                        Double monto,
+                        Integer plazo,
+                        String email,
+                        String nombre,
+                        String tipoPrestamo,
+                        String estadoSolicitud,
+                        Double tasaInteres,
+                        Double salarioBase,
+                        Double deudaTotalMensual,
+                        Integer solicitudesAprobadas) {
         this.id = id;
         this.monto = monto;
         this.plazo = plazo;
