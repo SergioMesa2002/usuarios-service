@@ -5,9 +5,9 @@ import com.crediya.usuarios.infrastructure.entity.SolicitudEntity;
 import com.crediya.usuarios.infrastructure.repository.SolicitudReactiveRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
-import reactor.core.publisher.Flux;
 
 @Service
 public class SolicitudService {
@@ -18,7 +18,7 @@ public class SolicitudService {
         this.repository = repository;
     }
 
-    // Método para registrar una solicitud
+    // Método para registrar una solicitud (siempre como Pendiente)
     public Mono<Solicitud> registrarSolicitud(Solicitud solicitud) {
         SolicitudEntity entity = new SolicitudEntity(
                 null,
@@ -26,7 +26,7 @@ public class SolicitudService {
                 solicitud.getMontoSolicitado(),
                 solicitud.getPlazoSolicitado(),
                 solicitud.getTipoPrestamo(),
-                "Pendiente", // Siempre se guarda como Pendiente
+                "Pendiente",
                 LocalDateTime.now()
         );
 
@@ -79,9 +79,26 @@ public class SolicitudService {
     // Método para listar solicitudes filtradas y paginadas (DTO)
     public Flux<com.crediya.usuarios.infrastructure.dto.SolicitudDTO> listarSolicitudesFiltradas(String estado, int page, int size) {
         int offset = page * size;
-        return repository.findSolicitudesFiltradas(estado,  size, offset);
+        return repository.findSolicitudesFiltradas(estado, size, offset);
     }
 
-
-
+    // 🔥 Método para actualizar el estado de una solicitud
+    public Mono<Solicitud> actualizarEstado(Long id, String nuevoEstado) {
+        return repository.findById(id)
+                .flatMap(entity -> {
+                    entity.setEstado(nuevoEstado);
+                    return repository.save(entity);
+                })
+                .map(updated -> {
+                    Solicitud domain = new Solicitud();
+                    domain.setId(updated.getId());
+                    domain.setClienteId(updated.getClienteId());
+                    domain.setMontoSolicitado(updated.getMontoSolicitado());
+                    domain.setPlazoSolicitado(updated.getPlazoSolicitado());
+                    domain.setTipoPrestamo(updated.getTipoPrestamo());
+                    domain.setEstado(updated.getEstado());
+                    domain.setFechaCreacion(updated.getFechaCreacion());
+                    return domain;
+                });
+    }
 }
